@@ -95,7 +95,7 @@ abstract class BaseController
     {
         // TODO: Implement __call() method.
 
-        return show(0, '找不到' . $name . '方法', null, 400);
+        return show(config('status.action_not_found'), '找不到' . $name . '方法', null, 400);
     }
 
 }

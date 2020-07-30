@@ -94,13 +94,8 @@ abstract class BaseController
     public function __call($name, $arguments)
     {
         // TODO: Implement __call() method.
-        $result = [
-            'status' => 0,
-            'message' => '服务器走丢了',
-            'result' => null,
-        ];
 
-        return json($result);
+        return show(0, '找不到' . $name . '方法', null, 400);
     }
 
 }

@@ -24,6 +24,7 @@ class Login extends AdminBase
 
     public function index()
     {
+
        return View::fetch("index");
     }
 

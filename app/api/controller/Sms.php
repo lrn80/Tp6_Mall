@@ -11,7 +11,7 @@ namespace app\api\controller;
 
 use app\api\validate\User;
 use app\BaseController;
-use \app\common\bussiness\AliSms as SmsBus;
+use \app\common\bussiness\Sms as SmsBus;
 class Sms extends BaseController
 {
     public function code()

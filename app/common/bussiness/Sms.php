@@ -7,6 +7,7 @@
 
 namespace app\common\bussiness;
 
+use app\common\lib\ClassArr;
 use app\common\lib\Num;
 use app\common\lib\sms\AliSms;
 use think\facade\Cache;
@@ -17,9 +18,13 @@ class Sms
     {
         // 生成短信验证码 4 位
         $code = Num::getCode($len);
-        $type = ucfirst($type);
-        $class = 'app\comment\lib\sms\\' . $type . 'Sms';
-        $sms = $class::sendCode($phoneNumber, $code);
+//        $type = ucfirst($type);
+//        $class = 'app\common\lib\sms\\' . $type . 'Sms';
+//        $sms = $class::sendCode($phoneNumber, $code);
+
+        $classStats = ClassArr::smsClassStat();
+        $classObj = ClassArr::initClass($type, $classStats);
+        $sms = $classObj::sendCode($phoneNumber, $code);
 
         // 将短信验证码记录到redis
         if ($sms) {

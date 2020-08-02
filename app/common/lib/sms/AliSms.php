@@ -23,6 +23,7 @@ class AliSms
      */
     public static function sendCode($phone, $code)
     {
+        return true;
         if (empty($phone) || empty($code)) {
             return false;
         }

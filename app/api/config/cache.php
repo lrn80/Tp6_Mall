@@ -25,6 +25,7 @@ return [
             'serialize'  => [],
         ],
         // 更多的缓存连接
+
         'redis' => [
             // 驱动方式
             'type'   => 'redis',
@@ -34,4 +35,6 @@ return [
             'select'     => 1,
         ],
     ],
+
+
 ];

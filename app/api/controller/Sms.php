@@ -28,7 +28,7 @@ class Sms extends BaseController
         }
 
         // 调用 business
-        if (SmsBus::sendCode($phone_number)) {
+        if (SmsBus::sendCode($phone_number, 4)) {
             return show(config('status.success'), '发送验证码成功！');
         }
 

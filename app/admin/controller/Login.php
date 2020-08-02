@@ -8,31 +8,32 @@
 
 namespace app\admin\controller;
 
-
-use app\BaseController;
-use app\common\model\mysql\AdminUser;
+use app\admin\business\AdminUser;
 use think\facade\View;
-
+use \app\admin\validate\AdminUser as AdminUserValidate;
 class Login extends AdminBase
 {
     public function initialize()
     {
         if ($this->isLogin()) {
-            return $this->redirect("index/index");
+            return $this->redirect(url("index/index"));
         }
     }
 
     public function index()
     {
-
        return View::fetch("index");
     }
 
     public function md5()
     {
-
+        echo md5('123456');
     }
 
+    /**
+     * 后端登录验证
+     * @return \think\response\Json
+     */
     public function check()
     {
         if (!$this->request->isPost()) {
@@ -43,8 +44,15 @@ class Login extends AdminBase
         $password = $this->request->param('password', '', 'trim');
         $captcha = $this->request->param('captcha', '', 'trim');
 
-        if (empty($username) || empty($password) || empty($captcha)) {
-            return show(config('status.error'), "参数不能为空！");
+        $data = [
+            'username' => $username,
+            'password' => $password,
+            'captcha' => $captcha,
+        ];
+        $validate = new AdminUserValidate();
+
+        if (! $validate->check($data)) {
+            return show(config('status.error'), $validate->getError());
         }
 
         if (!captcha_check($captcha)) {
@@ -52,31 +60,15 @@ class Login extends AdminBase
         }
 
         try {
-            $adminUserObj = new AdminUser();
-            $adminUser = $adminUserObj->getAdminUserByUsername($username);
-
-            if (empty($adminUser) || $adminUser->status != config('status.mysql.table_normal')) {
-                show(config('status.error'), "用户不存在");
-            }
-
-            $adminUser = $adminUser->toArray();
-
-            // 密码判断
-
-            $updateData = [
-                'last_login_time' => time(),
-                'last_login_ip' => request()->ip(),
-            ];
-
-            $res = $adminUserObj->updateById($adminUser['id'], $updateData);
-
-            if (empty($res)) {
-                return show(config('status.error'), "登陆失败");
-            }
+            $res = AdminUser::login($data);
         } catch (\Exception $e) {
-            return show(config('status.error'), "内部异常，登陆失败");
+             return show(config('status.error'), $e->getMessage());
         }
-        session(config('admin.session_admin', $adminUser));
-        return show(config('status.success'), "登陆成功");
+
+        if ($res) {
+           return show(config('status.success'), '登陆成功');
+        } else {
+           return show(config('status.error'), '登陆失败');
+        }
     }
 }

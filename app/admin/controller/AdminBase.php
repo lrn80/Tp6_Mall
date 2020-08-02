@@ -28,7 +28,6 @@ class AdminBase extends BaseController
     public function isLogin()
     {
         $this->adminUser = session(config('admin.session_admin'));
-
         if (empty($this->adminUser)) {
             return false;
         }

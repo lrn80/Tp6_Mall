@@ -12,7 +12,7 @@ use AlibabaCloud\Client\AlibabaCloud;
 use AlibabaCloud\Client\Exception\ClientException;
 use AlibabaCloud\Client\Exception\ServerException;
 
-class AliSms
+class AliSms implements SmsBase
 {
     /**
      * 阿里云发送短信验证码

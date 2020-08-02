@@ -11,7 +11,7 @@ namespace app\api\controller;
 
 use app\api\validate\User;
 use app\BaseController;
-use \app\common\bussiness\Sms as SmsBus;
+use \app\common\bussiness\AliSms as SmsBus;
 class Sms extends BaseController
 {
     public function code()
@@ -28,7 +28,7 @@ class Sms extends BaseController
         }
 
         // 调用 business
-        if (SmsBus::sendCode($phone_number, 4)) {
+        if (SmsBus::sendCode($phone_number, 4, 'ali')) {
             return show(config('status.success'), '发送验证码成功！');
         }
 

@@ -7,6 +7,7 @@
 namespace app\admin\exception\Http;
 
 use think\exception\Handle;
+use think\exception\HttpResponseException;
 use think\Response;
 use Throwable;
 
@@ -25,6 +26,14 @@ class Http extends Handle
      */
     public function render($request, Throwable $e): Response
     {
+        if ($e instanceof \think\Exception) {
+            return show($e->getCode(), $e->getMessage());
+        }
+
+        if ($e instanceof HttpResponseException) {
+            return parent::render($request, $e);
+        }
+
         if (method_exists($e, 'getStatusCode')) {
             $httpStatusCode = $e->getStatusCode();
         } else {

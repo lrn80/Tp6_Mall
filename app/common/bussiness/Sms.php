@@ -9,7 +9,6 @@ namespace app\common\bussiness;
 
 use app\common\lib\ClassArr;
 use app\common\lib\Num;
-use app\common\lib\sms\AliSms;
 use think\facade\Cache;
 
 class Sms

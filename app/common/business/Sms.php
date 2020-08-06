@@ -5,7 +5,7 @@
  * motto: 知行合一!
  */
 
-namespace app\common\bussiness;
+namespace app\common\business;
 
 use app\common\lib\ClassArr;
 use app\common\lib\Num;

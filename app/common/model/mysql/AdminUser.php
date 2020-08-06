@@ -11,7 +11,7 @@ namespace app\common\model\mysql;
 
 use think\Model;
 
-class AdminUser extends Model
+class AdminUser extends BaseModel
 {
     /**
      * 根据用户名获取后端表的的数据

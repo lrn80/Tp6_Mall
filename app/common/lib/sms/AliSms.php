@@ -23,6 +23,7 @@ class AliSms implements SmsBase
      */
     public static function sendCode($phone, $code)
     {
+        echo $code;
         return true;
         if (empty($phone) || empty($code)) {
             return false;
@@ -50,7 +51,7 @@ class AliSms implements SmsBase
                     ],
                 ])
                 ->request();
-            print_r($result->toArray());
+
         } catch (ClientException $e) {
             return false;
             //echo $e->getErrorMessage() . PHP_EOL;
@@ -58,6 +59,6 @@ class AliSms implements SmsBase
             return false;
             //echo $e->getErrorMessage() . PHP_EOL;
         }
-
+        return true;
     }
 }

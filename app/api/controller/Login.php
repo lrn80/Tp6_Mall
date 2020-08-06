@@ -15,7 +15,7 @@ class Login extends ApiBase
 {
     public function index()
     {
-        if ($this->request->isPost()) {
+        if (! $this->request->isPost()) {
             return show(config('status.error'), '请求方式不对');
         }
 
@@ -35,7 +35,7 @@ class Login extends ApiBase
         }
 
         try {
-            $result = (new \app\common\bussiness\User())->login($data);
+            $result = (new \app\common\business\User())->login($data);
         } catch (\Exception $e) {
             return show($e->getCode(), $e->getMessage());
         }

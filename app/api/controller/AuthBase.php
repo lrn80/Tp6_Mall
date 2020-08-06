@@ -19,8 +19,8 @@ class AuthBase extends  ApiBase
         parent::initialize();
         $this->accessToken = $this->request->header('access-token');
 
-        if ($this->accessToken || ! $this->isLogin()) {
-            return $this->show(show(config('status.not_login'), '没有登陆'));
+        if (! $this->accessToken || ! $this->isLogin()) {
+            return $this->show(config('status.not_login'), '没有登陆');
         }
     }
 

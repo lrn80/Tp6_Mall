@@ -7,7 +7,7 @@
 
 
 namespace app\api\controller;
-use  \app\common\bussiness\User as UserBus;
+use  \app\common\business\User as UserBus;
 
 class User extends AuthBase
 {

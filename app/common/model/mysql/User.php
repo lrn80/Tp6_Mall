@@ -11,7 +11,7 @@ namespace app\common\model\mysql;
 
 use think\Model;
 
-class User extends Model
+class User extends BaseModel
 {
     /**
      * 自动写入当前时间

@@ -6,7 +6,7 @@
  */
 
 
-namespace app\common\bussiness;
+namespace app\common\business;
 
 use app\common\lib\Str;
 use app\common\lib\Time;
@@ -24,11 +24,11 @@ class User
 
     public function login($data)
     {
-//       $redisCode = cache(config('redis.code_pre') . $data['phone_number']);
-//
-//       if (empty($redisCode) || $redisCode = $data['code']) {
-//           throw new Exception('验证码不正确', -1009);
-//       }
+       $redisCode = cache(config('redis.code_pre') . $data['phone_number']);
+
+       if (empty($redisCode) || $redisCode != $data['code']) {
+           throw new Exception('验证码不正确', -1009);
+       }
 
        $user = $this->userObj->getUserByPhoneNumber($data['phone_number']);
 

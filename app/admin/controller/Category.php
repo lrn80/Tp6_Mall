@@ -124,10 +124,10 @@ class Category extends AdminBase
      * @return \think\response\View
      */
     public function dialog() {
-        // 获取正常的一级分类数据。 代码提供好 带小伙伴解读下代码 @9-5
-        $categorys = (new CategoryBus())->getNormalByPid();
+        // 获取正常的一级分类数据。
+        $categories = (new CategoryBus())->getNormalByPid();
         return view("", [
-            "categorys" => json_encode($categorys),
+            "categories" => json_encode($categories),
         ]);
     }
 
@@ -136,7 +136,7 @@ class Category extends AdminBase
      */
     public function getByPid() {
         $pid = input("param.pid", 0, "intval");
-        $categorys = (new CategoryBus())->getNormalByPid($pid);
-        return show(config("status.success"), "OK", $categorys);
+        $categories = (new CategoryBus())->getNormalByPid($pid);
+        return show(config("status.success"), "OK", $categories);
     }
 }

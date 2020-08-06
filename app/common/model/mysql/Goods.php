@@ -9,7 +9,7 @@
 namespace app\common\model\mysql;
 
 
-class Goods
+class Goods extends BaseModel
 {
     /**
      * 获取后端列表数据

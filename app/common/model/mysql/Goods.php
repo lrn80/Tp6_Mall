@@ -11,36 +11,9 @@ namespace app\common\model\mysql;
 
 class Goods extends BaseModel
 {
-    /**
-     * 获取后端列表数据
-     * @param $where
-     * @param int $num
-     * @return \think\Paginator
-     * @throws \think\db\exception\DbException
-     */
-    public function getLists0($data, $num = 10) {
-        $order = ["listorder" => "desc", "id" => "desc"];
-        // "status", "<>", config("status.mysql.table_delete")
-        //$list = $res->where("status", "<>", config("status.mysql.table_delete"))
-        $list = $this->whereIn("status", [0, 1])
-            ->order($order)
-            ->paginate($num);
-        ///echo $this->getLastSql();exit;
-        return $list;
-
-
-    }
-
-    /**
-     * title查询条件表达式
-     * 搜索器仅在调用withSearch方法的时候触发。
-     * @param $query
-     * @param $value
-     */
     public function searchTitleAttr($query, $value) {
         $query->where('title', 'like', '%' . $value . '%');
     }
-
 
     public function searchCreateTimeAttr($query, $value) {
         $query->whereBetweenTime('create_time', $value[0], $value[1]);
@@ -57,17 +30,15 @@ class Goods extends BaseModel
         $list = $res->whereIn("status", [0, 1])
             ->order($order)
             ->paginate($num);
-
         //echo $this->getLastSql();exit;
+        //SELECT * FROM `mall_goods` WHERE `title` LIKE '%kk%' AND `status` IN (0,1) ORDER BY `listorder` DESC,`id` DESC LIMIT 0,5
+        //SELECT * FROM `mall_goods` WHERE `title` LIKE '%kk%' AND `create_time` BETWEEN 1587558000 AND 1587558120 AND `status` IN (0,1) ORDER BY `listorder` DESC,`id` DESC LIMIT 0,5
         return $list;
     }
 
     public function getNormalGoodsByCondition($where, $field = true, $limit = 5) {
-        $order = ["listorder" => "desc", "id" => "desc"];
-
-        //$where["status"] = config("status.success");   // 修改如下内容，
-        $where["status"] = config("status.mysql.table_normal");
-
+        $order = ["listorder" => "desc", "id" => "decs"];
+        $where["status"] = config("status.success");
         $result = $this->where($where)
             ->order($order)
             ->field($field)
@@ -76,34 +47,34 @@ class Goods extends BaseModel
         return $result;
     }
 
+    /**
+     * 图片获取，处理图片不同源的情况，使前端正常显示图片
+     */
     public function getImageAttr($value) {
-        // 1
-        // 2
         return request()->domain().$value;
     }
+
     public function getCarouselImageAttr($value) {
-        // 1
-        // 2
-        if(!empty($value)) {
+        if (!empty($value)) {
             $value = explode(",", $value);
-            $value = array_map(function($v){
-                return request()->domain() . $v;
+            $value = array_map(function($v) {
+                return request()->domain().$v;
             }, $value);
+            return $value;
         }
-        return $value;
+
     }
 
-    public function getNormalGoodsFindInSetCategoryId($categoryId, $field =true, $limit = 10) {
-        $order = ["listorder" => "desc", "id" => "desc"];
-
+    public function getNormalGoodsFindInSetCategoryId($categoryId, $field = true, $limit = 10) {
+        $order = ["listorder" => "desc", "id" => "decs"];
         $result = $this->whereFindInSet("category_path_id", $categoryId)
-            ->where("status", "=", config("status.mysql.table_normal"))
+            ->where("status", "=", config("status.success"))
             ->order($order)
             ->field($field)
-            ->limit(10)
+            ->limit($limit)
             ->select();
-
         //echo $this->getLastSql();exit;
+        //SELECT sku_id as id,`title`,`price`,recommend_image as image FROM `mall_goods` WHERE FIND_IN_SET(71, `category_path_id`) AND `status` = 1 ORDER BY `listorder` DESC,`id` LIMIT 10
         return $result;
     }
 

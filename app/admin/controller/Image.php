@@ -13,7 +13,8 @@ use \app\admin\validate\Image as ImageValidate;
 
 class Image extends AdminBase
 {
-    public function upload() {
+    public function upload()
+    {
 
         if(!$this->request->isPost()) {
             return show(config("status.error"), "请求不合法");
@@ -21,10 +22,15 @@ class Image extends AdminBase
 
         $file = $this->request->file("file");
 
+
+
         // 1 、上传图片类型需要判断 png gif jpg  2、文件大小限制 600kb，
         $validate = new ImageValidate();
-
-        if (! $validate->check(['image_name' => $file->getOriginalName()])) {
+        $data = [
+            'image_name' => $file->getOriginalName(),
+            'size' => $file->getSize()
+        ];
+        if (! $validate->check($data)) {
             return show(config('status.error'), $validate->getError());
         }
 
@@ -36,15 +42,16 @@ class Image extends AdminBase
             return show(config("status.error"), "上传图片失败");
         }
 
-
-        // 这个地方的路径一定要注意
         $imageUrl = [
-            "image"  =>  "/storage/".$filename
+            "image"  =>  "/upload/".$filename
         ];
+
         return show(config("status.success"), "图片上传成功", $imageUrl);
 
     }
-    public function layUpload() {
+
+    public function layUpload()
+    {
         if(!$this->request->isPost()) {
             return show(config("status.error"), "请求不合法");
         }

@@ -10,8 +10,9 @@ namespace app\common\business;
 
 use \app\common\model\mysql\Goods as GoodsModel;
 use think\facade\Cache;
+use think\facade\Log;
 
-class Goods
+class Goods extends BusBase
 {
     public $model = NULL;
 
@@ -28,7 +29,7 @@ class Goods
     public function insertData($data) {
         // 开启一个事务
         $this->model->startTrans();
-        //$this->model->startTrans();
+
         try {
             $goodsId = $this->add($data);
             if (!$goodsId) {
@@ -40,12 +41,15 @@ class Goods
                 $goodsSkuData = [
                     "goods_id" => $goodsId,
                 ];
-                // untodo 小伙伴自行完成
+                // untodo
                 return true;
             } elseif ($data['goods_specs_type'] == 2) { // 多规格他是我们电商的核心
-                $goodsSkuBisobj = new GoodsSkuBis();
+
+                $goodsSkuBisobj = new GoodsSku();
+
                 $data['goods_id'] = $goodsId;
                 $res = $goodsSkuBisobj->saveAll($data);
+
                 // 如果不为空
                 if (!empty($res)) {
                     // 总库存
@@ -58,6 +62,8 @@ class Goods
                     ];
                     // 执行完毕之后 更新 主表中的数据哦。
                     $goodsRes = $this->model->updateById($goodsId, $goodsUpdateData);
+                    Log::info(__LINE__ . "Rouning ");
+                    Log::info($res);
                     if (!$goodsRes) {
                         throw  new \think\Exception("insertData:goods主表更新失败");
                     }
@@ -70,6 +76,7 @@ class Goods
             return true;
         }catch (\think\Exception $e) {
             // 记录日志 untodo
+            Log::error('商品插入异常 goods_id' . $goodsId);
             // 事务回滚
             $this->model->rollback();
             return false;
@@ -101,7 +108,7 @@ class Goods
 
     /**
      * 获取首页大图（轮播图）
-     * @return [type] [description]
+     * @return array [type] [description]
      */
     public function getRotationChart() {
         $data = [
@@ -166,7 +173,7 @@ class Goods
         // sku_id sku表 => goods_id goods表 => tilte image description
         // sku  => sku数据
         // join
-        $skuBisObj = new GoodsSkuBis();
+        $skuBisObj = new GoodsSku();
         $goodsSku = $skuBisObj->getNormalSkuAndGoods($skuId);
 
         if(!$goodsSku) {
@@ -192,7 +199,7 @@ class Goods
         if($goods['goods_specs_type'] == 1) {
             $sku = [];
         } else {
-            $sku = (new SpecsValueBis())->dealGoodsSkus($gids, $flagValue);
+            $sku = (new SpecsValue())->dealGoodsSkus($gids, $flagValue);
         }
         $result = [
             "title" => $goods['title'],

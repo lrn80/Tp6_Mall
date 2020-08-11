@@ -43,11 +43,8 @@ class BaseModel extends Model
         if(!$condition || !is_array($condition)) {
             return false;
         }
-        $result = $this->where($condition)
+        return $this->where($condition)
             ->order($order)
             ->select();
-
-        ///echo $this->getLastSql();exit;
-        return $result;
     }
 }

@@ -39,6 +39,7 @@ class Goods extends AdminBase
         }
         // todo：验证参数
         $data = input("param.");
+
         //防止csrf攻击做一次校验
         $check = $this->request->checkToken('__token__');
         if(!$check) {
@@ -48,7 +49,7 @@ class Goods extends AdminBase
         $data['category_path_id'] = $data['category_id'];
         $result = explode(",", $data['category_path_id']);
         $data['category_id'] = end($result);
-        $res = (new GoodsBis())->insertData($data);
+        $res = (new GoodsBus())->insertData($data);
         if(!$res) {
             return show(config('status.error'), "商品新增失败");
         }

@@ -8,7 +8,7 @@
 
 后端使用的是五层架构，打破了传统的MVC的三层架构，把主要的业务逻辑放到了Bussiness层使得Controller层更加简洁。每一层的职责更加清晰，项目的维护成本也大大降低。
 
-<img src="images/mall-1.png" style="width:60%;" />
+<img src="images/mall-1.png" style="zoom:60%;" />
 
 #### 用户登陆逻辑
 

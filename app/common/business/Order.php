@@ -50,6 +50,7 @@ class Order extends BusBase
         ];
 
         $this->model->startTrans();
+
         try {
             // 新增 order
             $id = $this->add($orderData);
@@ -142,8 +143,6 @@ class Order extends BusBase
              *
              * 第二步： 如果第一步status修改7之后， 我们需要再查询order_goods表， 拿到 sku_id num  把sku表数据库存增加num
              *        goods表总库存也需要修改。
-             *
-             *
              */
         } else {
             return false;

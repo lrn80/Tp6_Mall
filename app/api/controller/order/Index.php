@@ -10,6 +10,7 @@ namespace app\api\controller\order;
 
 
 use app\api\controller\AuthBase;
+use app\common\business\Order;
 use app\common\lib\Show;
 
 class Index extends AuthBase
@@ -57,6 +58,7 @@ class Index extends AuthBase
         if(empty($id)) {
             return Show::error("参数错误");
         }
+
         $data = [
             "user_id" => $this->userId,
             "order_id" => $id,

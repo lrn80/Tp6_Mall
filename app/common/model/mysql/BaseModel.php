@@ -9,6 +9,10 @@
 namespace app\common\model\mysql;
 
 
+use think\Collection;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\DbException;
+use think\db\exception\ModelNotFoundException;
 use think\Model;
 
 class BaseModel extends Model
@@ -34,10 +38,10 @@ class BaseModel extends Model
      * 根据条件查询
      * @param array $condition
      * @param array $order
-     * @return bool|\think\Collection
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
+     * @return bool|Collection
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
      */
     public function getByCondition($condition = [], $order = ["id" => "desc"]) {
         if(!$condition || !is_array($condition)) {

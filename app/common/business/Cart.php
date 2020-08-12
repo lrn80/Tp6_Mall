@@ -45,36 +45,37 @@ class Cart extends BusBase
 
     public function lists($userId, $ids) {
         try {
-            if ($ids) { //如果有id获取选中的id商品，在购物车和订单页面都适用
+            if($ids) {
                 $ids = explode(",", $ids);
-                $res = Cache::hMget(Key::UserCart($userId), $ids);
-                // 判断非法用户获取数据
-                if (in_array(FALSE, array_values($res))) {
+                $res = Cache::hMget(Key::userCart($userId), $ids);
+                if(in_array(false, array_values($res))) {
                     return [];
                 }
-            } else { //如果没有id，获取所有商品
-                $res = Cache::hGetAll(Key::UserCart($userId));
+            } else {
+                $res = Cache::hGetAll(Key::userCart($userId));
             }
-        } catch (\Exception $e) {
+        }catch (\Exception $e) {
             $res = [];
         }
-
-        if (!$res) {
+        if(!$res) {
             return [];
         }
 
         $result = [];
         $skuIds = array_keys($res);
+
         $skus = (new GoodsSku())->getNormalInIds($skuIds);
+
+        $stocks = array_column($skus, "stock", "id");
         $skuIdPrice = array_column($skus, "price", "id");
         $skuIdSpecsValueIds = array_column($skus, "specs_value_ids", "id");
         $specsValues = (new SpecsValue())->dealSpecsValue($skuIdSpecsValueIds);
 
-        foreach ($res as $k => $v) {
+        foreach($res as $k => $v) {
             $price = $skuIdPrice[$k] ?? 0;
             $v = json_decode($v, true);
-            if($ids && isset($stocks[$k]) && $stocks[$k] < $v['num']) { //如果不存在或者商品数量不够
-                throw new \think\Exception($v['title']."的商品库存不足");
+            if($ids && isset($stocks[$k]) && $stocks[$k] < $v['num']) {
+                throw new \think\Exception($v['title'] . "的商品库存不足");
             }
             $v['id'] = $k;
             $v['image'] = preg_match("/http:\/\//", $v['image']) ? $v['image'] : request()->domain().$v['image'];
@@ -83,12 +84,9 @@ class Cart extends BusBase
             $v['sku'] = $specsValues[$k] ?? "暂无规则";
             $result[] = $v;
         }
-
-        if (!empty($result)) {
-            //购物车排列，根据时间做倒序排序
-            $result = Arr::arrSortByKey($result, "create_time");
+        if(!empty($result)) {
+            $result = Arr::arrsSortByKey($result, "create_time");
         }
-
         return $result;
     }
 
